@@ -30,6 +30,8 @@ public class DiscordManager {
     private Role role;
     private TextChannel channel;
 
+    private boolean active;
+
     private DiscordMessageListener discordMessageListener;
 
     private DiscordManager() {
@@ -38,6 +40,7 @@ public class DiscordManager {
         roleId = Aegis.config.getString("member_role_id");
         channelId = Aegis.config.getString("whitelist_channel_id");
         logger = Aegis.logger;
+        active = false;
 
         // Config and build the JDA
         builder = JDABuilder.createDefault(token);
@@ -69,31 +72,28 @@ public class DiscordManager {
         builder.enableIntents(GatewayIntent.GUILD_MEMBERS);
     }
 
-    public void turnOffChannel() {
-        // TODO: override TextChannel perms
-        // channel.getPermissionOverride(guild.getPublicRole()).delete().queue();
-        // channel.createPermissionOverride(guild.getPublicRole()).setDeny(Permission.MESSAGE_WRITE).queue();
-    }
-
-    public void turnOnChannel() {
-        // TODO: override TextChannel perms
-        // channel.getPermissionOverride(guild.getPublicRole()).delete().queue();
-        // channel.createPermissionOverride(guild.getPublicRole()).setAllow(Permission.MESSAGE_WRITE).queue();
-    }
-
     public void turnOnListener() {
+        if (active) return;
         discordMessageListener = new DiscordMessageListener();
         jda.addEventListener(discordMessageListener);
+        active = true;
     }
 
     public void turnOffListener() {
+        // FIXME: исправить то, что нужно писть команду 10 раз. сделать асинхронный поток
         List<Member> membersWithRoles = guild.getMembersWithRoles(role);
-        for (Member m:
-             membersWithRoles) {
-            guild.removeRoleFromMember(m, role).complete();
+        for (Member m :
+                membersWithRoles) {
+            try {
+                guild.removeRoleFromMember(m, role).queue();
+            } catch (Exception e) {
+                logger.info("Исключение в очистке ролей!!! " + e.getMessage());
+            }
         }
+
         try {
             jda.removeEventListener(discordMessageListener);
+            active = false;
         } catch (IllegalArgumentException e) {
             // ignore
         }
@@ -108,5 +108,15 @@ public class DiscordManager {
 
     public static boolean hasInstance() {
         return instance != null;
+    }
+
+    public void kickWithoutRoles() {
+        List<Member> members = guild.getMembers();
+        for (Member member :
+                members) {
+            if (member.getRoles().isEmpty()) {
+                member.kick().queue();
+            }
+        }
     }
 }

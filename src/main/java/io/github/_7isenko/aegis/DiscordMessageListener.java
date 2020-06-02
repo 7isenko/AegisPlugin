@@ -19,8 +19,8 @@ public class DiscordMessageListener extends ListenerAdapter {
             try {
                 String nickname = message.split(" ")[1];
                 UUIDGetter.getInstance().registerPlayerByNickname(nickname);
-                event.getMessage().addReaction("\uD83D\uDC4D").complete(); // 👍
-                guild.addRoleToMember(event.getMember(), event.getGuild().getRoleById(Aegis.config.getString("member_role_id"))).complete();
+                event.getMessage().addReaction("\uD83D\uDC4D").queue(); // 👍
+                guild.addRoleToMember(event.getMember(), event.getGuild().getRoleById(Aegis.config.getString("member_role_id"))).queue();
             } catch (IndexOutOfBoundsException e) {
                 badRequest(event, "ввел никнейм неправильно.");
             } catch (NullPointerException e) {
@@ -32,7 +32,7 @@ public class DiscordMessageListener extends ListenerAdapter {
     private void badRequest(MessageReceivedEvent event, String message) {
         Member member = event.getMember();
         event.getGuild().getTextChannelById(Aegis.config.getString("notifications_channel_id")).sendMessage("<@" + member.getId() + ">" + " " + message).queue();
-        event.getMessage().addReaction("\uD83D\uDC4E").complete(); // 👎
-        member.kick(message).complete();
+        event.getMessage().addReaction("\uD83D\uDC4E").queue(); // 👎
+        member.kick(message).queue();
     }
 }

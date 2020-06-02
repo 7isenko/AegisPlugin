@@ -5,8 +5,8 @@ main: io.github._7isenko.aegis.Aegis
 api-version: 1.12
 commands:
   event:
-    description: Starts or stops your discord bot.
-    usage: /event start, /event stop
+    description: Starts or stops your discord bot. "kick" kicks every member without role from discord.
+    usage: /event start, /event stop, /event kick
     permission: aegis.usage
 permissions:
   aegis.usage:
