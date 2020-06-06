@@ -12,6 +12,7 @@ import net.dv8tion.jda.api.utils.MemberCachePolicy;
 import javax.security.auth.login.LoginException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 import java.util.logging.Logger;
 
 public class DiscordManager {
@@ -33,6 +34,7 @@ public class DiscordManager {
     private boolean active;
 
     private DiscordMessageListener discordMessageListener;
+    private WhitelistManager whitelistManager;
 
     private DiscordManager() {
         token = Aegis.config.getString("token");
@@ -65,6 +67,11 @@ public class DiscordManager {
 
     }
 
+    public void register(String username) throws IndexOutOfBoundsException, NullPointerException {
+        UUID uuid = UUIDGetter.getInstance().getUuid(username);
+        whitelistManager.addToWhitelist(uuid);
+    }
+
     private void configureBuilder() {
         builder.setActivity(Activity.listening("чат"));
         builder.setChunkingFilter(ChunkingFilter.ALL);
@@ -72,25 +79,46 @@ public class DiscordManager {
         builder.enableIntents(GatewayIntent.GUILD_MEMBERS);
     }
 
-    public void turnOnListener() {
+    public void kickWithoutRoles() {
+        List<Member> members = guild.getMembers();
+        for (Member member :
+                members) {
+            if (member.getRoles().isEmpty()) {
+                member.kick().queue();
+            }
+        }
+    }
+
+    public void start() {
+        // Не допускаем двукратный старт
         if (active) return;
-        discordMessageListener = new DiscordMessageListener();
+
+        // Запуск менеджера вайтлиста
+        whitelistManager = WhitelistManager.getInstance();
+
+        // Запуск отслеживания сообщений в канале "whitelist_channel"
+        discordMessageListener = new DiscordMessageListener(this);
         jda.addEventListener(discordMessageListener);
         active = true;
     }
 
-    public void turnOffListener() {
-        // FIXME: исправить то, что нужно писть команду 10 раз. сделать асинхронный поток
+    public void stop() {
+        // Чистка вайтлиста
+        if (whitelistManager != null) {
+            whitelistManager.clearWhitelist();
+        }
+
+        // Удаление разданных ролей
         List<Member> membersWithRoles = guild.getMembersWithRoles(role);
-        for (Member m :
-                membersWithRoles) {
+        for (Member m : membersWithRoles) {
             try {
                 guild.removeRoleFromMember(m, role).queue();
             } catch (Exception e) {
-                logger.info("Исключение в очистке ролей!!! " + e.getMessage());
+                logger.info("Проблема при удалении роли: " + e.getMessage());
             }
         }
 
+        // Остановка отслеживания сообщений
         try {
             jda.removeEventListener(discordMessageListener);
             active = false;
@@ -110,13 +138,4 @@ public class DiscordManager {
         return instance != null;
     }
 
-    public void kickWithoutRoles() {
-        List<Member> members = guild.getMembers();
-        for (Member member :
-                members) {
-            if (member.getRoles().isEmpty()) {
-                member.kick().queue();
-            }
-        }
-    }
 }

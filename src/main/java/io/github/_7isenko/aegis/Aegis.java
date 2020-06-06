@@ -26,7 +26,6 @@ public class Aegis extends JavaPlugin {
 
             // Регистрация команд
             this.getCommand("event").setExecutor(new EventCommand());
-            pluginManager.registerEvents(new UUIDRegisterListener(), this);
             logger.info("DiscordMC is started!");
         } else {
             logger.info("You did not fill the config. Plugin is going to disable.");
@@ -36,10 +35,12 @@ public class Aegis extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        UUIDRegisterListener.clearWhitelist();
-        logger.info("Whitelist is clean");
+        if (WhitelistManager.hasInstance()) {
+            WhitelistManager.getInstance().clearWhitelist();
+            logger.info("Whitelist is clean");
+        }
         if (DiscordManager.hasInstance()) {
-            DiscordManager.getInstance().turnOffListener();
+            DiscordManager.getInstance().stop();
             logger.info("Members are gone");
             logger.info("Discord listener is off");
         }

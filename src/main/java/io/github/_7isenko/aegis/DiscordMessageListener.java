@@ -8,6 +8,13 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import javax.annotation.Nonnull;
 
 public class DiscordMessageListener extends ListenerAdapter {
+    private static DiscordManager dm;
+
+    public DiscordMessageListener(DiscordManager dm) {
+        super();
+        DiscordMessageListener.dm = dm;
+    }
+
     @Override
     public void onMessageReceived(@Nonnull MessageReceivedEvent event) {
         String message = event.getMessage().getContentRaw();
@@ -18,7 +25,8 @@ public class DiscordMessageListener extends ListenerAdapter {
         if (message.startsWith("!" + keyword)) {
             try {
                 String nickname = message.split(" ")[1];
-                UUIDGetter.getInstance().registerPlayerByNickname(nickname);
+
+                dm.register(nickname);
                 event.getMessage().addReaction("\uD83D\uDC4D").queue(); // 👍
                 guild.addRoleToMember(event.getMember(), event.getGuild().getRoleById(Aegis.config.getString("member_role_id"))).queue();
             } catch (IndexOutOfBoundsException e) {

@@ -11,27 +11,25 @@ public class EventCommand implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         dm = DiscordManager.getInstance();
-        try {
-            action = args[0];
-            if (action == null) {
+        if (args.length == 0)
+            return false;
+        action = args[0];
+        switch (action) {
+            case "start":
+                dm.start();
+                sender.sendMessage("Бот запущен");
+                break;
+            case "stop":
+                dm.stop();
+                sender.sendMessage("Бот выключен, вайтлист очищен");
+                break;
+            case "kick":
+                dm.kickWithoutRoles();
+                sender.sendMessage("Игроки без ролей были выгнаны");
+                break;
+            default:
+                sender.sendMessage("Команда была введена неправильно");
                 return false;
-            }
-        } catch (Exception e) {
-            return false;
-        }
-        if (action.equals("start")) {
-            dm.turnOnListener();
-            sender.sendMessage("Бот запущен");
-        } else if (action.equals("stop")) {
-            UUIDRegisterListener.clearWhitelist();
-            dm.turnOffListener();
-            sender.sendMessage("Бот выключен, вайтлист очищен");
-        } else if (action.equals("kick")) {
-            dm.kickWithoutRoles();
-            sender.sendMessage("Игроки без ролей были выгнаны");
-        } else {
-            sender.sendMessage("Команда была введена неправильно");
-            return false;
         }
         return true;
     }
