@@ -40,11 +40,10 @@ public class Aegis extends JavaPlugin {
             logger.info("Whitelist is clean");
         }
         if (DiscordManager.hasInstance()) {
+            DiscordManager.getInstance().disableDiscordListener();
             DiscordManager.getInstance().stop();
             logger.info("Members are gone");
             logger.info("Discord listener is off");
         }
-
-
     }
 }

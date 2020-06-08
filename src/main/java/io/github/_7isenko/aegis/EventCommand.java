@@ -27,6 +27,17 @@ public class EventCommand implements CommandExecutor {
                 dm.kickWithoutRoles();
                 sender.sendMessage("Игроки без ролей были выгнаны");
                 break;
+            case "emote":
+                dm.startEmoteMode();
+                sender.sendMessage("Дропаю мессадж");
+                break;
+            case "add":
+                if (dm.isEmoteMode()) {
+                    int num = Integer.parseInt(args[1]);
+                    dm.setChosenRoles(num);
+                    sender.sendMessage("Запущен процесс добавления " + num + " игроков");
+                } else sender.sendMessage("Сначала напиши !emote и подожди");
+                break;
             default:
                 sender.sendMessage("Команда была введена неправильно");
                 return false;

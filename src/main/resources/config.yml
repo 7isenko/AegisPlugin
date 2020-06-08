@@ -1,8 +1,11 @@
 token: put_here_your_token
 server_id: 1234567890
-notifications_channel_id: 1234567890
+control_channel_id: 1234567890
 whitelist_channel_id: 1234567890
+announce_channel_id: 1234567890
+greeting_channel_id: 1234567890
 member_role_id: 1234567890
+chosen_role_id: 1234567890
 
 # Поставить true, если конфиг заполнен.
 filled: false
