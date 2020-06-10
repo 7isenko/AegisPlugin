@@ -24,13 +24,26 @@ public class DiscordEventMessageListener extends ListenerAdapter {
         String keyword = Aegis.config.getString("command");
         if (!event.getChannel().equals(dm.getWhitelistChannel()))
             return;
+
+        // Remove a "chosen" role
+        if (dm.isEmoteMode()) {
+            try {
+                guild.removeRoleFromMember(event.getMember(), dm.getChosenRole()).queue();
+            } catch (Exception e) {
+                // Ignore
+            }
+        }
+
         if (rawMessage.startsWith("!" + keyword)) {
             try {
                 String nickname = rawMessage.split(" ")[1];
 
                 dm.register(nickname);
                 event.getMessage().addReaction("\uD83D\uDC4D").queue(); // 👍
+
+                // Add a "member" role
                 guild.addRoleToMember(event.getMember(), dm.getMemberRole()).queue();
+
             } catch (IndexOutOfBoundsException e) {
                 badRequest(message, "ввел никнейм неправильно.");
             } catch (NullPointerException e) {
@@ -44,6 +57,7 @@ public class DiscordEventMessageListener extends ListenerAdapter {
         assert member != null;
         dm.getControlChannel().sendMessage("<@" + member.getId() + ">" + " " + text).queue();
         message.addReaction("\uD83D\uDC4E").queue(); // 👎
-        member.kick(text).queue();
+        if (Aegis.config.getBoolean("allow_kick"))
+            member.kick(text).queue();
     }
 }

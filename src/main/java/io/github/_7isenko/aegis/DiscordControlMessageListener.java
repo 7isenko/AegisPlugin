@@ -22,7 +22,7 @@ public class DiscordControlMessageListener extends ListenerAdapter {
     @Override
     public void onMessageReceived(@Nonnull MessageReceivedEvent event) {
         String rawMessage = event.getMessage().getContentRaw();
-        if (!event.getChannel().equals(controlChannel))
+        if (!event.getChannel().equals(controlChannel) || event.getMember().getUser().isBot())
             return;
 
         if (rawMessage.startsWith("!")) {
@@ -38,8 +38,10 @@ public class DiscordControlMessageListener extends ListenerAdapter {
                     logResult("Бот выключен, вайтлист очищен. Роли сейчас заберу");
                     break;
                 case "!kick":
-                    dm.kickWithoutRoles();
-                    logResult("Массовый безрольный кик запущен");
+                    if (Aegis.config.getBoolean("allow_kick")) {
+                        dm.kickWithoutRoles();
+                        logResult("Массовый безрольный кик запущен");
+                    } else logResult("Кик выключен");
                     break;
                 case "!emote":
                 case "!emoji":
@@ -61,11 +63,12 @@ public class DiscordControlMessageListener extends ListenerAdapter {
                     break;
                 case "!help":
                     logResult("!start - Запуск простого вайтлист-бота (включать).\n" +
-                            "!emote, !emoji, !react, !ultra - Запуск крутого бота, работающего через реацию на сообщении.\n" +
+                            "!emote, !emoji, !react, !ultra - Запуск крутого бота, работающего через реацию на сообщении. И обычного вайтлист-бота.\n" +
                             "!add <число> - дает роль \"избранного\" <числу> людей, оставивших реакцию.\n" +
                             "!stop - оба бота стопаются.\n" +
                             "!kick - кикает из дискорда всех челиков без ролей.\n" +
                             "!help - вывести это сообщение");
+                    break;
                 default:
                     logResult("Команда была введена неправильно, чек !help");
             }

@@ -7,6 +7,8 @@ greeting_channel_id: 1234567890
 member_role_id: 1234567890
 chosen_role_id: 1234567890
 
+allow_kick: true
+
 # Поставить true, если конфиг заполнен.
 filled: false
 

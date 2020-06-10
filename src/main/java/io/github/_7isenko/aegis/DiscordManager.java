@@ -173,7 +173,18 @@ public class DiscordManager {
     }
 
     public void stopEmoteMode() {
-        // TODO: сделать лол
+        if (emoteMode) {
+            // Удаление разданных ролей 2
+            List<Member> membersWithRoles2 = guild.getMembersWithRoles(chosenRole);
+            for (Member m : membersWithRoles2) {
+                try {
+                    guild.removeRoleFromMember(m, chosenRole).queue();
+                } catch (Exception e) {
+                    // ignore
+                }
+            }
+        }
+        emoteMode = false;
     }
 
     public static DiscordManager getInstance() {
