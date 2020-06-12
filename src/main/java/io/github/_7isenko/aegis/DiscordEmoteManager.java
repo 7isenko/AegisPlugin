@@ -35,7 +35,7 @@ public class DiscordEmoteManager {
             try {
                 Member member = dm.getGuild().getMember(user);
                 assert member != null;
-                if (i[0] <= amount && !member.getRoles().contains(dm.getChosenRole()) && !member.getRoles().contains(dm.getMemberRole())) {
+                if (i[0] < amount && !member.getRoles().contains(dm.getChosenRole()) && !member.getRoles().contains(dm.getMemberRole())) {
                     members.add(member);
                     ++i[0];
                 }
