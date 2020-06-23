@@ -6,7 +6,7 @@
 
     <groupId>io.github.7isenko</groupId>
     <artifactId>Aegis</artifactId>
-    <version>1.5</version>
+    <version>1.7</version>
     <build>
         <plugins>
             <!-- Maven Assembly Plugin -->

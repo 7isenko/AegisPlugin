@@ -35,14 +35,16 @@ public class DiscordEmoteManager {
             try {
                 Member member = dm.getGuild().getMember(user);
                 assert member != null;
-                if (i[0] < amount && !member.getRoles().contains(dm.getChosenRole()) && !member.getRoles().contains(dm.getMemberRole())) {
+                if (i[0] < amount && !member.getRoles().contains(dm.getChosenRole()) && !member.getRoles().contains(dm.getMemberRole()) && !member.getUser().isBot()) {
                     members.add(member);
                     ++i[0];
                 }
             } catch (Exception e) {
-                System.out.println("Caught exception during getting members from emote: " + e.getMessage());
+                Aegis.logger.info("Caught exception during getting members from emote: " + e.getMessage());
             }
         });
         return members;
     }
 }
+
+

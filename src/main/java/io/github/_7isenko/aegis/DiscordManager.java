@@ -11,6 +11,7 @@ import net.dv8tion.jda.api.utils.MemberCachePolicy;
 import javax.security.auth.login.LoginException;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 import java.util.logging.Logger;
 
 public class DiscordManager {
@@ -122,27 +123,10 @@ public class DiscordManager {
         }
 
         // Удаление разданных ролей
-        List<Member> membersWithRoles = guild.getMembersWithRoles(memberRole);
-        for (Member m : membersWithRoles) {
-            try {
-                guild.removeRoleFromMember(m, memberRole).queue();
-                guild.removeRoleFromMember(m, chosenRole).queue();
-            } catch (Exception e) {
-                // ignore
-            }
-        }
+        new DiscordCrowdRoleRemover(guild.getMembersWithRoles(memberRole), memberRole, guild).removeRoles();
 
-        if (emoteMode) {
-            // Удаление разданных ролей 2
-            List<Member> membersWithRoles2 = guild.getMembersWithRoles(chosenRole);
-            for (Member m : membersWithRoles2) {
-                try {
-                    guild.removeRoleFromMember(m, chosenRole).queue();
-                } catch (Exception e) {
-                    // ignore
-                }
-            }
-        }
+        // Удаление разданных ролей 2
+        stopEmoteMode();
 
         // Остановка отслеживания сообщений
         try {
@@ -167,24 +151,16 @@ public class DiscordManager {
                 guild.addRoleToMember(m, chosenRole).queue();
                 greetingChannel.sendMessage(num + ". Приветствую, " + "<@" + m.getId() + ">" + ", бегом регистрироваться в <#" + whitelistChannelId + ">, и ты в съемках!").queue();
             } catch (Exception e) {
-                System.out.println("Error during setting chosen role: " + e.getMessage());
+                Aegis.logger.info("Error during setting chosen role: " + e.getMessage());
             }
         }
     }
 
     public void stopEmoteMode() {
         if (emoteMode) {
-            // Удаление разданных ролей 2
-            List<Member> membersWithRoles2 = guild.getMembersWithRoles(chosenRole);
-            for (Member m : membersWithRoles2) {
-                try {
-                    guild.removeRoleFromMember(m, chosenRole).queue();
-                } catch (Exception e) {
-                    // ignore
-                }
-            }
+            new DiscordCrowdRoleRemover(guild.getMembersWithRoles(chosenRole), chosenRole, guild).removeRoles();
+            emoteMode = false;
         }
-        emoteMode = false;
     }
 
     public static DiscordManager getInstance() {
