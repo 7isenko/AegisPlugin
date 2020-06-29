@@ -11,6 +11,3 @@ allow_kick: true
 
 # Поставить true, если конфиг заполнен.
 filled: false
-
-# Без восклицательного знака!
-command: set

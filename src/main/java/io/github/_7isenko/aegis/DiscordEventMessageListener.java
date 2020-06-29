@@ -22,7 +22,6 @@ public class DiscordEventMessageListener extends ListenerAdapter {
         try {
             String rawMessage = message.getContentRaw();
             Guild guild = event.getGuild();
-            String keyword = Aegis.config.getString("command");
             if (!event.getChannel().equals(dm.getWhitelistChannel()))
                 return;
 
@@ -35,6 +34,7 @@ public class DiscordEventMessageListener extends ListenerAdapter {
                 }
             }
 
+            String keyword = "set";
             if (rawMessage.startsWith("!" + keyword)) {
                 try {
                     String nickname = rawMessage.split(" ")[1];

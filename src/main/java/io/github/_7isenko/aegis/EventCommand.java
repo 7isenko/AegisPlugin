@@ -38,7 +38,7 @@ public class EventCommand implements CommandExecutor {
                     int num = Integer.parseInt(args[1]);
                     dm.setChosenRoles(num);
                     sender.sendMessage("Запущен процесс добавления " + num + " игроков");
-                } else sender.sendMessage("Сначала напиши !emote и подожди");
+                } else sender.sendMessage("Сначала напиши /event emote и подожди");
                 break;
             default:
                 sender.sendMessage("Команда была введена неправильно");

@@ -44,9 +44,6 @@ public class DiscordControlMessageListener extends ListenerAdapter {
                     } else logResult("Кик выключен");
                     break;
                 case "!emote":
-                case "!emoji":
-                case "!react":
-                case "!ultra":
                     dm.start();
                     dm.startEmoteMode();
                     break;
@@ -63,7 +60,7 @@ public class DiscordControlMessageListener extends ListenerAdapter {
                     break;
                 case "!help":
                     logResult("!start - Запуск простого вайтлист-бота (включать).\n" +
-                            "!emote, !emoji, !react, !ultra - Запуск крутого бота, работающего через реацию на сообщении. И обычного вайтлист-бота.\n" +
+                            "!emote - Запуск крутого бота, работающего через реацию на сообщении. И обычного вайтлист-бота.\n" +
                             "!add <число> - дает роль \"избранного\" <числу> людей, оставивших реакцию.\n" +
                             "!stop - оба бота стопаются.\n" +
                             "!kick - кикает из дискорда всех челиков без ролей.\n" +
