@@ -1,5 +1,6 @@
 package io.github._7isenko.aegis;
 
+import net.dv8tion.jda.api.exceptions.InsufficientPermissionException;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;

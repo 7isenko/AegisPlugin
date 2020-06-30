@@ -3,6 +3,7 @@ package io.github._7isenko.aegis;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import net.dv8tion.jda.api.exceptions.InsufficientPermissionException;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
 import javax.annotation.Nonnull;
@@ -58,13 +59,48 @@ public class DiscordControlMessageListener extends ListenerAdapter {
                         }
                     } else logResult("Сначала напиши !emote и подожди");
                     break;
+                case "!link": {
+                    if (fullCommand.length == 1) {
+                        logResult("Я понимаю только !link <число>/status/remove");
+                        return;
+                    }
+                    if (LinkManager.hasInstance()) {
+                        try {
+                            if (fullCommand[1].equalsIgnoreCase("check") || fullCommand[1].equalsIgnoreCase("status")) {
+                                logResult("Статус: " + LinkManager.getInstance().getUses());
+                                return;
+                            } else if (fullCommand[1].equalsIgnoreCase("remove")) {
+                                LinkManager.getInstance().clear();
+                                logResult("Я ударил ссылку, и она умерла.");
+                                return;
+                            }
+                        } catch (IndexOutOfBoundsException e) {
+                            logResult("Я понимаю только !link <число>/status/remove");
+                        } catch (NullPointerException e) {
+                            logResult("Я просто хочу сказать, что Максим РУКОЖОП. МАКСИМ, ТЫ О ЧЕМ ДУМАЛ, КОГДА КОД ПИСАЛ?");
+                        }
+                    }
+                    try {
+                        int num = Integer.parseInt(fullCommand[1]);
+                        LinkManager lm = LinkManager.setInstance(dm.getAnnounceChannel(), num);
+                        logResult("Ссылка на " + num + " человек: " + lm.getLink());
+                        new Thread(lm).start();
+                    } catch (NumberFormatException e) {
+                        logResult("Я понимаю только !link <число>/status/remove");
+                    } catch (InsufficientPermissionException e) {
+                        logResult("Прав нет, дай права `CREATE_INSTANT_INVITE`");
+                    }
+                }
+                break;
                 case "!help":
                     logResult("!start - Запуск простого вайтлист-бота (включать).\n" +
                             "!emote - Запуск крутого бота, работающего через реацию на сообщении. И обычного вайтлист-бота.\n" +
                             "!add <число> - дает роль \"избранного\" <числу> людей, оставивших реакцию.\n" +
                             "!stop - оба бота стопаются.\n" +
                             "!kick - кикает из дискорда всех челиков без ролей.\n" +
-                            "!help - вывести это сообщение");
+                            "!link <число> - дает ссылочку для приглашения нужного числа людей.\n" +
+                            "!link check - выводит информацию о ссылочке.\n" +
+                            "!link remove - насильно стопает ссылочку\n");
                     break;
                 default:
                     logResult("Команда была введена неправильно, чек !help");

@@ -41,8 +41,6 @@ public class Aegis extends JavaPlugin {
         }
         if (DiscordManager.hasInstance()) {
             DiscordManager.getInstance().disableDiscordListener();
-            DiscordManager.getInstance().stop();
-            logger.info("Members are gone");
             logger.info("Discord listener is off");
         }
     }
