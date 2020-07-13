@@ -18,7 +18,7 @@ public class LinkManager implements Runnable {
     public void run() {
         while (used < uses) {
             try {
-                Thread.sleep(3000);
+                Thread.sleep(2000);
                 invite = update(invite);
                 used = invite.getUses();
             } catch (IllegalStateException e) {
@@ -33,8 +33,6 @@ public class LinkManager implements Runnable {
 
         }
         clear();
-
-
     }
 
     public String getLink() {
@@ -63,6 +61,8 @@ public class LinkManager implements Runnable {
 
     private Invite generate() {
         active = true;
+        if (uses <= 100)
+            return channel.createInvite().setUnique(true).setMaxAge(1800).setMaxUses(uses).complete();
         return channel.createInvite().setUnique(true).setMaxAge(1800).complete();
     }
 
