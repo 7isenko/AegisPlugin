@@ -7,11 +7,10 @@ import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.api.utils.ChunkingFilter;
 import net.dv8tion.jda.api.utils.MemberCachePolicy;
 
-
 import javax.security.auth.login.LoginException;
 import java.util.List;
 import java.util.UUID;
-import java.util.concurrent.CompletableFuture;
+import java.util.function.Consumer;
 import java.util.logging.Logger;
 
 public class DiscordManager {
@@ -91,6 +90,7 @@ public class DiscordManager {
         builder.setChunkingFilter(ChunkingFilter.ALL);
         builder.setMemberCachePolicy(MemberCachePolicy.ALL);
         builder.enableIntents(GatewayIntent.GUILD_MEMBERS);
+        builder.setRelativeRateLimit(true);
     }
 
     public void kickWithoutRoles() {
@@ -146,14 +146,12 @@ public class DiscordManager {
         List<Member> members = discordEmoteManager.getEmotedMembers(amount);
         int num = 0;
         for (Member m : members) {
-            try {
-                ++num;
-                guild.addRoleToMember(m, chosenRole).queue();
-                greetingChannel.sendMessage(num + ". Приветствую, " + "<@" + m.getId() + ">" + ", бегом регистрироваться в <#" + whitelistChannelId + ">, и ты в съемках!").queue();
-            } catch (Exception e) {
-                Aegis.logger.info("Error during setting chosen role: " + e.getMessage());
-            }
+            ++num;
+            int finalNum = num;
+            guild.addRoleToMember(m, chosenRole).queue(aVoid -> greetingChannel.sendMessage(finalNum + ". Приветствую, " + "<@" + m.getId() + ">" + ", бегом регистрироваться в <#" + whitelistChannelId + ">, и ты в съемках!").queue(),
+                    throwable -> controlChannel.sendMessage("Похоже, что " + m.getUser().getAsTag() + " был выбран ботом, но вышел из сервера.").queue());
         }
+        controlChannel.sendMessage(StatsCollector.getInstance().showResults()).queue();
     }
 
     public void stopEmoteMode() {

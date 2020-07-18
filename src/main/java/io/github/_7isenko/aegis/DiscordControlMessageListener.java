@@ -76,8 +76,6 @@ public class DiscordControlMessageListener extends ListenerAdapter {
                             }
                         } catch (IndexOutOfBoundsException e) {
                             logResult("Я понимаю только !link <число>/status/remove");
-                        } catch (NullPointerException e) {
-                            logResult("Я просто хочу сказать, что Максим РУКОЖОП. МАКСИМ, ТЫ О ЧЕМ ДУМАЛ, КОГДА КОД ПИСАЛ?");
                         }
                     }
                     try {
