@@ -5,10 +5,7 @@ import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.entities.User;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 public class DiscordEmoteManager {
     private final DiscordManager dm;
@@ -39,9 +36,9 @@ public class DiscordEmoteManager {
         List<Member> members = new ArrayList<>();
         int[] i = {0};
         List<User> users = dm.getAnnounceChannel().retrieveReactionUsersById(emoteMessage.getId(), "✋").complete();
-        StatsCollector.getInstance().setBeforeShuffle(users);
+        StatsCollector.getInstance().setBeforeShuffle(new ArrayList<>(users));
         Collections.shuffle(users);
-        StatsCollector.getInstance().setAfterShuffle(users);
+        StatsCollector.getInstance().setAfterShuffle(new ArrayList<>(users));
         users.forEach((user) -> {
             try {
                 Member member = dm.getGuild().getMember(user);

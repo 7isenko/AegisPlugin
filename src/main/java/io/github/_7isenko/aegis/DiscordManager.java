@@ -10,7 +10,6 @@ import net.dv8tion.jda.api.utils.MemberCachePolicy;
 import javax.security.auth.login.LoginException;
 import java.util.List;
 import java.util.UUID;
-import java.util.function.Consumer;
 import java.util.logging.Logger;
 
 public class DiscordManager {
@@ -144,14 +143,20 @@ public class DiscordManager {
 
     public void setChosenRoles(int amount) {
         List<Member> members = discordEmoteManager.getEmotedMembers(amount);
-        int num = 0;
-        for (Member m : members) {
-            ++num;
-            int finalNum = num;
-            guild.addRoleToMember(m, chosenRole).queue(aVoid -> greetingChannel.sendMessage(finalNum + ". Приветствую, " + "<@" + m.getId() + ">" + ", бегом регистрироваться в <#" + whitelistChannelId + ">, и ты в съемках!").queue(),
-                    throwable -> controlChannel.sendMessage("Похоже, что " + m.getUser().getAsTag() + " был выбран ботом, но вышел из сервера.").queue());
+        try {
+            int num = 0;
+            for (Member m : members) {
+                ++num;
+                int finalNum = num;
+                guild.addRoleToMember(m, chosenRole).queue(aVoid -> greetingChannel.sendMessage(finalNum + ". Приветствую, " + "<@" + m.getId() + ">" + ", бегом регистрироваться в <#" + whitelistChannelId + ">, и ты в съемках!").queue(),
+                        throwable -> controlChannel.sendMessage("Похоже, что " + m.getUser().getAsTag() + " был выбран ботом, но вышел из сервера.").queue());
+            }
+        } catch (Exception e) {
+            controlChannel.sendMessage("В процессе вышла какая-то ошибка: " + e.getMessage());
+        } finally {
+            announceChannel.sendMessage(StatsCollector.getInstance().showBefore()).queue();
+            announceChannel.sendMessage(StatsCollector.getInstance().showAfter()).queue();
         }
-        controlChannel.sendMessage(StatsCollector.getInstance().showResults()).queue();
     }
 
     public void stopEmoteMode() {

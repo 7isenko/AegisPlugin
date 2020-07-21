@@ -34,13 +34,18 @@ public class StatsCollector {
         return instance;
     }
 
-    public String showResults() {
+    public String showBefore() {
         StringBuffer sb = new StringBuffer();
         sb.append("Число участников: ").append(beforeShuffle.size()).append("\nСписок людей в их порядке до шаффла:");
         for (int i = 0; i < beforeShuffle.size(); i++) {
             sb.append("\n").append((i + 1)).append(". ").append(beforeShuffle.get(i).getAsTag());
         }
-        sb.append("\nСписок людей в их порядке после шаффла: ");
+        return sb.toString();
+    }
+
+    public String showAfter() {
+        StringBuffer sb = new StringBuffer();
+        sb.append("Список людей в их порядке после шаффла: ");
         for (int i = 0; i < afterShuffle.size(); i++) {
             sb.append("\n").append((i + 1)).append(". ").append(afterShuffle.get(i).getAsTag());
         }
