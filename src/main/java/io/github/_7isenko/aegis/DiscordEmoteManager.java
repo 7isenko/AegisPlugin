@@ -36,9 +36,9 @@ public class DiscordEmoteManager {
         List<Member> members = new ArrayList<>();
         int[] i = {0};
         List<User> users = dm.getAnnounceChannel().retrieveReactionUsersById(emoteMessage.getId(), "✋").complete();
-        StatsCollector.getInstance().setBeforeShuffle(new ArrayList<>(users));
+        StatsCollector.getInstance().setBeforeShuffle(getTags(users));
         Collections.shuffle(users);
-        StatsCollector.getInstance().setAfterShuffle(new ArrayList<>(users));
+        StatsCollector.getInstance().setAfterShuffle(getTags(users));
         users.forEach((user) -> {
             try {
                 Member member = dm.getGuild().getMember(user);
@@ -55,6 +55,18 @@ public class DiscordEmoteManager {
             }
         });
         return members;
+    }
+
+    private List<String> getTags(List<User> users) {
+        ArrayList<String> tags = new ArrayList<>();
+        for (User user : users) {
+            try {
+                tags.add(user.getAsTag());
+            } catch (Exception e) {
+                tags.add("ливнул");
+            }
+        }
+        return tags;
     }
 }
 

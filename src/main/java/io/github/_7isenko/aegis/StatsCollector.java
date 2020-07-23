@@ -6,22 +6,22 @@ import java.util.List;
 
 public class StatsCollector {
     private static StatsCollector instance;
-    private List<User> beforeShuffle;
-    private List<User> afterShuffle;
+    private List<String> beforeShuffle;
+    private List<String> afterShuffle;
 
-    public List<User> getBeforeShuffle() {
+    public List<String> getBeforeShuffle() {
         return beforeShuffle;
     }
 
-    public void setBeforeShuffle(List<User> beforeShuffle) {
+    public void setBeforeShuffle(List<String> beforeShuffle) {
         this.beforeShuffle = beforeShuffle;
     }
 
-    public List<User> getAfterShuffle() {
+    public List<String> getAfterShuffle() {
         return afterShuffle;
     }
 
-    public void setAfterShuffle(List<User> afterShuffle) {
+    public void setAfterShuffle(List<String> afterShuffle) {
         this.afterShuffle = afterShuffle;
     }
 
@@ -35,19 +35,19 @@ public class StatsCollector {
     }
 
     public String showBefore() {
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         sb.append("Число участников: ").append(beforeShuffle.size()).append("\nСписок людей в их порядке до шаффла:");
         for (int i = 0; i < beforeShuffle.size(); i++) {
-            sb.append("\n").append((i + 1)).append(". ").append(beforeShuffle.get(i).getAsTag());
+            sb.append("\n").append((i + 1)).append(". ").append(beforeShuffle);
         }
         return sb.toString();
     }
 
     public String showAfter() {
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         sb.append("Список людей в их порядке после шаффла: ");
         for (int i = 0; i < afterShuffle.size(); i++) {
-            sb.append("\n").append((i + 1)).append(". ").append(afterShuffle.get(i).getAsTag());
+            sb.append("\n").append((i + 1)).append(". ").append(afterShuffle);
         }
         return sb.toString();
     }
