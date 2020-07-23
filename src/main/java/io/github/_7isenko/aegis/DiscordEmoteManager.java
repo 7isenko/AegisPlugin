@@ -38,6 +38,8 @@ public class DiscordEmoteManager {
         List<User> users = dm.getAnnounceChannel().retrieveReactionUsersById(emoteMessage.getId(), "✋").complete();
         StatsCollector.getInstance().setBeforeShuffle(getTags(users));
         Collections.shuffle(users);
+        Collections.shuffle(users);
+        Collections.shuffle(users);
         StatsCollector.getInstance().setAfterShuffle(getTags(users));
         users.forEach((user) -> {
             try {
@@ -51,7 +53,7 @@ public class DiscordEmoteManager {
                     ++i[0];
                 }
             } catch (Exception e) {
-                Aegis.logger.info("Caught exception during getting members from emote: " + e.getMessage());
+                dm.getControlChannel().sendMessage("Ошибочка во время сбора людей с эмоции: " + e.getMessage());
             }
         });
         return members;

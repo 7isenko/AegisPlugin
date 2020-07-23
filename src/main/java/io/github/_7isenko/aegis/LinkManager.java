@@ -6,7 +6,7 @@ import net.dv8tion.jda.api.exceptions.ErrorResponseException;
 
 import javax.annotation.Nullable;
 
-public class LinkManager implements Runnable {
+public class LinkManager {
     private static LinkManager instance = null;
     private Invite invite;
     private GuildChannel channel;
@@ -14,34 +14,8 @@ public class LinkManager implements Runnable {
     private int used = 0;
     private boolean active;
 
-    @Override
-    public void run() {
-        while (used < uses) {
-            try {
-                Thread.sleep(2000);
-                invite = update(invite);
-                used = invite.getUses();
-            } catch (IllegalStateException e) {
-                // ignore, we know it
-            } catch (ErrorResponseException e) {
-                Aegis.logger.info("О, я вижу ссылоку удалили.");
-                break;
-            } catch (Exception e) {
-                e.printStackTrace();
-                break;
-            }
-
-        }
-        clear();
-    }
-
     public String getLink() {
         return invite.getUrl();
-    }
-
-    public String getUses() {
-        used = invite.getUses();
-        return active ? used + "/" + uses : used + "/" + uses + "\nИ она отключена";
     }
 
     public void clear() {

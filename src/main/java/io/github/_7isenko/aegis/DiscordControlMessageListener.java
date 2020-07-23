@@ -7,6 +7,8 @@ import net.dv8tion.jda.api.exceptions.InsufficientPermissionException;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
 import javax.annotation.Nonnull;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 
 public class DiscordControlMessageListener extends ListenerAdapter {
     private DiscordManager dm;
@@ -55,36 +57,39 @@ public class DiscordControlMessageListener extends ListenerAdapter {
                             dm.setChosenRoles(num);
                             logResult("Запущен процесс добавления " + num + " игроков");
                         } catch (Exception e) {
-                            logResult("Ошибочка вышла, !help");
+                            logResult("Вылезла ошибка: " + e.getMessage());
+                            StringWriter sw = new StringWriter();
+                            e.printStackTrace(new PrintWriter(sw));
+                            logResult("```" + sw.toString() + "```");
                         }
                     } else logResult("Сначала напиши !emote и подожди");
                     break;
                 case "!link": {
                     if (fullCommand.length == 1) {
-                        logResult("Я понимаю только !link <число>/status/remove");
+                        LinkManager lm = LinkManager.setInstance(dm.getAnnounceChannel(), 101);
+                        logResult("Ссылка на неограниченное число людей: " + lm.getLink());
                         return;
                     }
                     if (LinkManager.hasInstance()) {
                         try {
-                            if (fullCommand[1].equalsIgnoreCase("check") || fullCommand[1].equalsIgnoreCase("status")) {
-                                logResult("Статус: " + LinkManager.getInstance().getUses());
-                                return;
-                            } else if (fullCommand[1].equalsIgnoreCase("remove")) {
+                            if (fullCommand[1].equalsIgnoreCase("remove")) {
                                 LinkManager.getInstance().clear();
                                 logResult("Я ударил ссылку, и она умерла.");
                                 return;
                             }
                         } catch (IndexOutOfBoundsException e) {
-                            logResult("Я понимаю только !link <число>/status/remove");
+                            logResult("Я понимаю только !link <число>/remove");
+                            return;
                         }
                     }
                     try {
                         int num = Integer.parseInt(fullCommand[1]);
                         LinkManager lm = LinkManager.setInstance(dm.getAnnounceChannel(), num);
-                        logResult("Ссылка на " + num + " человек: " + lm.getLink());
-                        new Thread(lm).start();
+                        if (num <= 100) {
+                            logResult("Ссылка на " + num + " человек: " + lm.getLink());
+                        } else logResult("Ссылка на неограниченное число людей: " + lm.getLink());
                     } catch (NumberFormatException e) {
-                        logResult("Я понимаю только !link <число>/status/remove");
+                        logResult("Я понимаю только !link <число>/remove");
                     } catch (InsufficientPermissionException e) {
                         logResult("Прав нет, дай права `CREATE_INSTANT_INVITE`");
                     }
@@ -97,7 +102,6 @@ public class DiscordControlMessageListener extends ListenerAdapter {
                             "!stop - оба бота стопаются.\n" +
                             "!kick - кикает из дискорда всех челиков без ролей.\n" +
                             "!link <число> - дает ссылочку для приглашения нужного числа людей.\n" +
-                            "!link check - выводит информацию о ссылочке.\n" +
                             "!link remove - насильно стопает ссылочку\n");
                     break;
                 default:
