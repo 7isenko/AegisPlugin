@@ -21,11 +21,7 @@ public class DiscordCrowdRoleRemover {
 
     public void removeRoles() {
         for (Member m : members) {
-            try {
-                guild.removeRoleFromMember(m, role).queue();
-            } catch (Throwable e) {
-                // ignore
-            }
+                guild.removeRoleFromMember(m, role).queue(null, throwable -> System.out.println("When roles were removing, one guy decided to cause exception: " + throwable.getMessage()));
         }
     }
 }
