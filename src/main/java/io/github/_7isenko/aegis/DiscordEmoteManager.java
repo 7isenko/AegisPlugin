@@ -5,6 +5,8 @@ import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.entities.User;
 
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
 import java.util.*;
 
 public class DiscordEmoteManager {
@@ -33,30 +35,29 @@ public class DiscordEmoteManager {
     }
 
     public List<Member> getEmotedMembers(int amount) {
-        List<Member> members = new ArrayList<>();
-        int[] i = {0};
         List<User> users = dm.getAnnounceChannel().retrieveReactionUsersById(emoteMessage.getId(), "✋").complete();
-        StatsCollector.getInstance().setBeforeShuffle(getTags(users));
-        Collections.shuffle(users);
-        Collections.shuffle(users);
-        Collections.shuffle(users);
-        StatsCollector.getInstance().setAfterShuffle(getTags(users));
-        users.forEach((user) -> {
-            try {
-                Member member = dm.getGuild().getMember(user);
-                if (member == null) {
-                    dm.getControlChannel().sendMessage("Очередной клоун на " + user.getAsTag() + " решил ливнуть во время сбора людей.").queue();
-                    return;
-                }
-                if (i[0] < amount && !member.getRoles().contains(dm.getChosenRole()) && !member.getRoles().contains(dm.getMemberRole()) && !member.getUser().isBot()) {
-                    members.add(member);
-                    ++i[0];
-                }
-            } catch (Exception e) {
-                dm.getControlChannel().sendMessage("Ошибочка во время сбора людей с эмоции: " + e.getMessage());
+        Set<Member> randomized = new HashSet<>();
+        Random r;
+
+        try {
+            r = SecureRandom.getInstance("RSA");
+        } catch (NoSuchAlgorithmException e) {
+            r = new Random();
+        }
+
+        if (amount > users.size()) amount = users.size();
+
+        while (randomized.size() < amount) {
+            if (users.size() == 0) break;
+            User user = users.get(r.nextInt(users.size()));
+            Member member = dm.getGuild().getMember(user);
+            if (member == null || randomized.contains(member) || member.getRoles().contains(dm.getChosenRole()) || member.getRoles().contains(dm.getMemberRole()) || member.getUser().isBot()) {
+                users.remove(user);
+                continue;
             }
-        });
-        return members;
+            randomized.add(member);
+        }
+        return new ArrayList<>(randomized);
     }
 
     private List<String> getTags(List<User> users) {

@@ -153,9 +153,6 @@ public class DiscordManager {
             }
         } catch (Exception e) {
             controlChannel.sendMessage("В процессе вышла какая-то ошибка: " + e.getMessage());
-        } finally {
-            announceChannel.sendMessage(StatsCollector.getInstance().showBefore()).queue();
-            announceChannel.sendMessage(StatsCollector.getInstance().showAfter()).queue();
         }
     }
 
