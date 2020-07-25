@@ -5,7 +5,6 @@ import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.entities.User;
 
-import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.util.*;
 
@@ -44,12 +43,7 @@ public class DiscordEmoteManager {
         Set<Member> randomized = new HashSet<>();
         Random r;
 
-        try {
-            r = SecureRandom.getInstance("RSA");
-        } catch (NoSuchAlgorithmException e) {
-            r = new Random();
-        }
-
+        r = new Random(System.currentTimeMillis());
         if (amount > users.size()) amount = users.size();
 
         while (randomized.size() < amount) {
