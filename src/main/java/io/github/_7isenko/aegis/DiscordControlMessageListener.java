@@ -95,6 +95,40 @@ public class DiscordControlMessageListener extends ListenerAdapter {
                     }
                 }
                 break;
+                case "!fakeadd":
+                    if (dm.isEmoteMode()) {
+                        if (fullCommand.length == 1) {
+                            logResult("!fakeadd <число>/re/set/clear");
+                            return;
+                        }
+                        try {
+                            int num = Integer.parseInt(fullCommand[1]);
+                            logResult("Запущен процесс добавления " + num + " игроков в скрытом режиме");
+                            FakeAddDiscordManager.getInstance().getChosenRoles(num);
+                            FakeAddDiscordManager.getInstance().getChosen().forEach(s -> logResult("```" + s + "```"));
+                        } catch (NumberFormatException e) {
+                            if (fullCommand[1].equalsIgnoreCase("set")) {
+                                FakeAddDiscordManager.getInstance().setChosenRoles();
+                                return;
+                            }
+                            if (fullCommand[1].equalsIgnoreCase("re")) {
+                                FakeAddDiscordManager.getInstance().getChosenRoles();
+                                FakeAddDiscordManager.getInstance().getChosen().forEach(s -> logResult("```" + s + "```"));
+                                return;
+                            }
+                            if (fullCommand[1].equalsIgnoreCase("clear")) {
+                                FakeAddDiscordManager.getInstance().clear();
+                                logResult("fakeadd почистил память");
+                                return;
+                            }
+                        } catch (Exception e) {
+                            logResult("Вылезла ошибка: " + e.getMessage());
+                            StringWriter sw = new StringWriter();
+                            e.printStackTrace(new PrintWriter(sw));
+                            logResult("```" + sw.toString() + "```");
+                        }
+                    } else logResult("Сначала напиши !emote и подожди");
+                    break;
                 case "!help":
                     logResult("!start - Запуск простого вайтлист-бота (включать).\n" +
                             "!emote - Запуск крутого бота, работающего через реацию на сообщении. И обычного вайтлист-бота.\n" +
@@ -102,7 +136,8 @@ public class DiscordControlMessageListener extends ListenerAdapter {
                             "!stop - оба бота стопаются.\n" +
                             "!kick - кикает из дискорда всех челиков без ролей.\n" +
                             "!link <число> - дает ссылочку для приглашения нужного числа людей.\n" +
-                            "!link remove - насильно стопает ссылочку\n");
+                            "!link remove - насильно стопает ссылочку\n" +
+                            "!fakeadd <число>/re/set/clear - делает темные вещи.");
                     break;
                 default:
                     logResult("Команда была введена неправильно, чек !help");

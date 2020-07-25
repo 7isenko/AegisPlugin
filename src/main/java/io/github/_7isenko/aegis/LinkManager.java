@@ -11,7 +11,6 @@ public class LinkManager {
     private Invite invite;
     private GuildChannel channel;
     private int uses;
-    private int used = 0;
     private boolean active;
 
     public String getLink() {

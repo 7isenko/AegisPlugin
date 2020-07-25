@@ -143,17 +143,17 @@ public class DiscordManager {
 
     public void setChosenRoles(int amount) {
         List<Member> members = discordEmoteManager.getEmotedMembers(amount);
-        try {
-            int num = 0;
-            for (Member m : members) {
-                ++num;
-                int finalNum = num;
-                guild.addRoleToMember(m, chosenRole).queue(aVoid -> greetingChannel.sendMessage(finalNum + ". Приветствую, " + "<@" + m.getId() + ">" + ", бегом регистрироваться в <#" + whitelistChannelId + ">, и ты в съемках!").queue(),
-                        throwable -> controlChannel.sendMessage("Похоже, что " + m.getUser().getAsTag() + " был выбран ботом, но вышел из сервера.").queue());
-            }
-        } catch (Exception e) {
-            controlChannel.sendMessage("В процессе вышла какая-то ошибка: " + e.getMessage());
+        int num = 0;
+        for (Member m : members) {
+            ++num;
+            addRoleToMember(m, num);
         }
+    }
+
+    public void addRoleToMember(Member member, int number) {
+        guild.addRoleToMember(member, chosenRole).queue(aVoid -> greetingChannel.sendMessage(number + ". Приветствую, " + "<@" + member.getId() + ">" + ", бегом регистрироваться в <#" + whitelistChannelId + ">, и ты в съемках!").queue(),
+                throwable -> controlChannel.sendMessage("Похоже, что " + member.getUser().getAsTag() + " был выбран ботом, но вышел из сервера.").queue());
+
     }
 
     public void stopEmoteMode() {
@@ -168,6 +168,10 @@ public class DiscordManager {
             instance = new DiscordManager();
         }
         return instance;
+    }
+
+    public DiscordEmoteManager getDiscordEmoteManager() {
+        return discordEmoteManager;
     }
 
     public static boolean hasInstance() {
@@ -211,4 +215,7 @@ public class DiscordManager {
 
     }
 
+    public TextChannel getGreetingChannel() {
+        return greetingChannel;
+    }
 }
