@@ -28,10 +28,6 @@ public class LinkManager {
         }
     }
 
-    private Invite update(Invite invite) {
-        return Invite.resolve(invite.getJDA(), invite.getCode()).complete().expand().complete();
-    }
-
     private Invite generate() {
         active = true;
         if (uses <= 100)

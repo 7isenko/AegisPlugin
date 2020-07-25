@@ -3,9 +3,7 @@ package io.github._7isenko.aegis;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.TextChannel;
-import net.dv8tion.jda.api.entities.User;
 
-import java.security.SecureRandom;
 import java.util.*;
 
 public class DiscordEmoteManager {
@@ -39,19 +37,20 @@ public class DiscordEmoteManager {
     }
 
     public List<Member> getEmotedMembers(int amount) {
-        List<User> users = dm.getAnnounceChannel().retrieveReactionUsersById(emoteMessage.getId(), "✋").complete();
-        Set<Member> randomized = new HashSet<>();
-        Random r;
+        List<Member> members = new ArrayList<>(dm.getGuild().getMembers());
+        members.removeAll(Collections.singleton(null));
+        dm.getAnnounceChannel().retrieveReactionUsersById(emoteMessage.getId(), "✋").complete();
 
-        r = new Random(System.currentTimeMillis());
-        if (amount > users.size()) amount = users.size();
+        Set<Member> randomized = new HashSet<>();
+        Random r = new Random(System.currentTimeMillis());
+        if (amount > members.size()) amount = members.size();
 
         while (randomized.size() < amount) {
-            if (users.size() == 0) break;
-            User user = users.get(r.nextInt(users.size()));
-            Member member = dm.getGuild().getMember(user);
-            if (member == null || randomized.contains(member) || member.getRoles().contains(dm.getChosenRole()) || member.getRoles().contains(dm.getMemberRole()) || member.getUser().isBot()) {
-                users.remove(user);
+            if (members.size() == 0) break;
+            Member member = members.get(r.nextInt(members.size()));
+            // Member member = dm.getGuild().getMember(user); может быть, тут нужно будет делать retrieve
+            if (member == null || randomized.contains(member) || !member.getRoles().isEmpty() || member.getUser().isBot()) {
+                members.remove(member);
                 continue;
             }
             randomized.add(member);
