@@ -24,7 +24,7 @@ public class EventCommand implements CommandExecutor {
                 sender.sendMessage("Бот выключен, вайтлист очищен");
                 break;
             case "kick":
-                if (Aegis.config.getBoolean("allow_kick")) {
+                if (dm.isAllowKick()) {
                     dm.kickWithoutRoles();
                     sender.sendMessage("Игроки без ролей были выгнаны");
                 } else sender.sendMessage("Кик выключен");

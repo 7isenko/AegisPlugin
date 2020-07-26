@@ -60,7 +60,7 @@ public class DiscordEventMessageListener extends ListenerAdapter {
         if (member != null) {
             dm.getControlChannel().sendMessage("<@" + member.getId() + ">" + " " + text).queue();
             message.addReaction("\uD83D\uDC4E").queue(); // 👎
-            if (Aegis.config.getBoolean("allow_kick"))
+            if (dm.isAllowKick())
                 member.kick(text).queue();
         } else {
             dm.getControlChannel().sendMessage("Какой-то писюн произвел исключение: " + text);

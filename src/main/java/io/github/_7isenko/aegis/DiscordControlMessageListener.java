@@ -41,7 +41,7 @@ public class DiscordControlMessageListener extends ListenerAdapter {
                     logResult("Бот выключен, вайтлист очищен. Роли сейчас заберу");
                     break;
                 case "!kick":
-                    if (Aegis.config.getBoolean("allow_kick")) {
+                    if (dm.isAllowKick()) {
                         dm.kickWithoutRoles();
                         logResult("Массовый безрольный кик запущен");
                     } else logResult("Кик выключен");

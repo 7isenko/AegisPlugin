@@ -33,6 +33,8 @@ public class DiscordManager {
     private DiscordControlMessageListener discordControlMessageListener;
     private WhitelistManager whitelistManager;
     private String whitelistChannelId;
+    private boolean allowKick;
+
 
     // Random
     private DiscordRandomManager discordRandomManager;
@@ -46,6 +48,8 @@ public class DiscordManager {
         String controlChannelId = Aegis.config.getString("control_channel_id");
         String announceChannelId = Aegis.config.getString("announce_channel_id");
         String greetingChannelId = Aegis.config.getString("greeting_channel_id");
+        allowKick = Aegis.config.getBoolean("allow_kick");
+
         logger = Aegis.logger;
         eventActive = false;
 
@@ -197,6 +201,10 @@ public class DiscordManager {
 
     public boolean isStarted() {
         return eventActive;
+    }
+
+    public boolean isAllowKick() {
+        return allowKick;
     }
 
     public void disableDiscordListener() {
