@@ -34,9 +34,8 @@ public class DiscordManager {
     private WhitelistManager whitelistManager;
     private String whitelistChannelId;
 
-    // EmoteMode
-    private boolean emoteMode;
-    private DiscordEmoteManager discordEmoteManager;
+    // Random
+    private DiscordRandomManager discordRandomManager;
 
     private DiscordManager() {
         String token = Aegis.config.getString("token");
@@ -49,7 +48,6 @@ public class DiscordManager {
         String greetingChannelId = Aegis.config.getString("greeting_channel_id");
         logger = Aegis.logger;
         eventActive = false;
-        emoteMode = false;
 
         // Config and build the JDA
         builder = JDABuilder.createDefault(token);
@@ -122,10 +120,10 @@ public class DiscordManager {
         }
 
         // Удаление разданных ролей
-        new DiscordCrowdRoleRemover(guild.getMembersWithRoles(memberRole), memberRole, guild).removeRoles();
+        new DiscordRoleRemover(guild.getMembersWithRoles(memberRole), memberRole, guild).removeRoles();
 
         // Удаление разданных ролей 2
-        stopEmoteMode();
+        stopRandomMode();
 
         // Остановка отслеживания сообщений
         try {
@@ -136,13 +134,9 @@ public class DiscordManager {
         }
     }
 
-    public void startEmoteMode() {
-        discordEmoteManager = new DiscordEmoteManager(this);
-        emoteMode = true;
-    }
-
     public void setChosenRoles(int amount) {
-        List<Member> members = discordEmoteManager.getEmotedMembers(amount);
+        List<Member> members = getDiscordRandomManager().getRandomMembers(amount);
+        getDiscordRandomManager().sendAnnounceMessage();
         int num = 0;
         for (Member m : members) {
             ++num;
@@ -151,16 +145,13 @@ public class DiscordManager {
     }
 
     public void addRoleToMember(Member member, int number) {
-        guild.addRoleToMember(member, chosenRole).queue(aVoid -> greetingChannel.sendMessage(number + ". Приветствую, " + "<@" + member.getId() + ">" + ", бегом регистрироваться в <#" + whitelistChannelId + ">, и ты в съемках!").queue(),
+        guild.addRoleToMember(member, chosenRole).queue(aVoid -> greetingChannel.sendMessage(number + ". Приветствую, " + member.getAsMention() + ", бегом регистрироваться в <#" + whitelistChannelId + ">, и ты в съемках!").queue(),
                 throwable -> controlChannel.sendMessage("Похоже, что " + member.getUser().getAsTag() + " был выбран ботом, но вышел из сервера.").queue());
 
     }
 
-    public void stopEmoteMode() {
-        if (emoteMode) {
-            new DiscordCrowdRoleRemover(guild.getMembersWithRoles(chosenRole), chosenRole, guild).removeRoles();
-            emoteMode = false;
-        }
+    public void stopRandomMode() {
+        new DiscordRoleRemover(guild.getMembersWithRoles(chosenRole), chosenRole, guild).removeRoles();
     }
 
     public static DiscordManager getInstance() {
@@ -170,8 +161,10 @@ public class DiscordManager {
         return instance;
     }
 
-    public DiscordEmoteManager getDiscordEmoteManager() {
-        return discordEmoteManager;
+    public DiscordRandomManager getDiscordRandomManager() {
+        if (discordRandomManager == null)
+            discordRandomManager = new DiscordRandomManager(this);
+        return discordRandomManager;
     }
 
     public static boolean hasInstance() {
@@ -202,8 +195,8 @@ public class DiscordManager {
         return announceChannel;
     }
 
-    public boolean isEmoteMode() {
-        return emoteMode;
+    public boolean isStarted() {
+        return eventActive;
     }
 
     public void disableDiscordListener() {

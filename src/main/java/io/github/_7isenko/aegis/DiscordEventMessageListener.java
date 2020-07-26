@@ -26,13 +26,12 @@ public class DiscordEventMessageListener extends ListenerAdapter {
                 return;
 
             // Remove a "chosen" role
-            if (dm.isEmoteMode()) {
-                try {
-                    guild.removeRoleFromMember(event.getMember(), dm.getChosenRole()).queue();
-                } catch (Exception e) {
-                    // Ignore
-                }
+            try {
+                guild.removeRoleFromMember(event.getMember(), dm.getChosenRole()).queue();
+            } catch (Exception e) {
+                // Ignore
             }
+
 
             String keyword = "set";
             if (rawMessage.startsWith("!" + keyword)) {

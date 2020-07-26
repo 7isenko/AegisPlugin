@@ -8,12 +8,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Executors;
 
-public class DiscordCrowdRoleRemover {
+public class DiscordRoleRemover {
     List<Member> members;
     Role role;
     Guild guild;
 
-    public DiscordCrowdRoleRemover(List<Member> members, Role role, Guild guild) {
+    public DiscordRoleRemover(List<Member> members, Role role, Guild guild) {
         this.members = members;
         this.role = role;
         this.guild = guild;

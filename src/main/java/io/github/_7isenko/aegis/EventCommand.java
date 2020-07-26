@@ -1,6 +1,5 @@
 package io.github._7isenko.aegis;
 
-import net.dv8tion.jda.api.exceptions.InsufficientPermissionException;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -30,16 +29,11 @@ public class EventCommand implements CommandExecutor {
                     sender.sendMessage("Игроки без ролей были выгнаны");
                 } else sender.sendMessage("Кик выключен");
                 break;
-            case "emote":
-                dm.startEmoteMode();
-                sender.sendMessage("Дропаю мессадж");
-                break;
             case "add":
-                if (dm.isEmoteMode()) {
-                    int num = Integer.parseInt(args[1]);
-                    dm.setChosenRoles(num);
-                    sender.sendMessage("Запущен процесс добавления " + num + " игроков");
-                } else sender.sendMessage("Сначала напиши /event emote и подожди");
+                int num = Integer.parseInt(args[1]);
+                dm.start();
+                dm.setChosenRoles(num);
+                sender.sendMessage("Запущен процесс добавления " + num + " игроков");
                 break;
             default:
                 sender.sendMessage("Команда была введена неправильно");

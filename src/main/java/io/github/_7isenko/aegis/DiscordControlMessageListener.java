@@ -33,7 +33,7 @@ public class DiscordControlMessageListener extends ListenerAdapter {
             String command = fullCommand[0];
             switch (command) {
                 case "!start":
-                    dm.start();
+                    if (!dm.isStarted()) dm.start();
                     logResult("Бот запущен");
                     break;
                 case "!stop":
@@ -46,23 +46,18 @@ public class DiscordControlMessageListener extends ListenerAdapter {
                         logResult("Массовый безрольный кик запущен");
                     } else logResult("Кик выключен");
                     break;
-                case "!emote":
-                    dm.start();
-                    dm.startEmoteMode();
-                    break;
                 case "!add":
-                    if (dm.isEmoteMode()) {
-                        try {
-                            int num = Integer.parseInt(fullCommand[1]);
-                            dm.setChosenRoles(num);
-                            logResult("Запущен процесс добавления " + num + " игроков");
-                        } catch (Exception e) {
-                            logResult("Вылезла ошибка: " + e.getMessage());
-                            StringWriter sw = new StringWriter();
-                            e.printStackTrace(new PrintWriter(sw));
-                            logResult("```" + sw.toString() + "```");
-                        }
-                    } else logResult("Сначала напиши !emote и подожди");
+                    try {
+                        int num = Integer.parseInt(fullCommand[1]);
+                        if (!dm.isStarted()) dm.start();
+                        dm.setChosenRoles(num);
+                        logResult("Запущен процесс добавления " + num + " игроков");
+                    } catch (Exception e) {
+                        logResult("Вылезла ошибка: " + e.getMessage());
+                        StringWriter sw = new StringWriter();
+                        e.printStackTrace(new PrintWriter(sw));
+                        logResult("```" + sw.toString() + "```");
+                    }
                     break;
                 case "!link": {
                     if (fullCommand.length == 1) {
@@ -96,38 +91,37 @@ public class DiscordControlMessageListener extends ListenerAdapter {
                 }
                 break;
                 case "!fakeadd":
-                    if (dm.isEmoteMode()) {
-                        if (fullCommand.length == 1) {
-                            logResult("!fakeadd <число>/re/set/clear");
+                    if (fullCommand.length == 1) {
+                        logResult("!fakeadd <число>/re/set/clear");
+                        return;
+                    }
+                    if (!dm.isStarted()) dm.start();
+                    try {
+                        int num = Integer.parseInt(fullCommand[1]);
+                        logResult("Запущен процесс добавления " + num + " игроков в скрытом режиме");
+                        FakeAddDiscordManager.getInstance().getChosenRoles(num);
+                        FakeAddDiscordManager.getInstance().getChosen().forEach(s -> logResult("```" + s + "```"));
+                    } catch (NumberFormatException e) {
+                        if (fullCommand[1].equalsIgnoreCase("set")) {
+                            FakeAddDiscordManager.getInstance().setChosenRoles();
                             return;
                         }
-                        try {
-                            int num = Integer.parseInt(fullCommand[1]);
-                            logResult("Запущен процесс добавления " + num + " игроков в скрытом режиме");
-                            FakeAddDiscordManager.getInstance().getChosenRoles(num);
+                        if (fullCommand[1].equalsIgnoreCase("re")) {
+                            FakeAddDiscordManager.getInstance().getChosenRoles();
                             FakeAddDiscordManager.getInstance().getChosen().forEach(s -> logResult("```" + s + "```"));
-                        } catch (NumberFormatException e) {
-                            if (fullCommand[1].equalsIgnoreCase("set")) {
-                                FakeAddDiscordManager.getInstance().setChosenRoles();
-                                return;
-                            }
-                            if (fullCommand[1].equalsIgnoreCase("re")) {
-                                FakeAddDiscordManager.getInstance().getChosenRoles();
-                                FakeAddDiscordManager.getInstance().getChosen().forEach(s -> logResult("```" + s + "```"));
-                                return;
-                            }
-                            if (fullCommand[1].equalsIgnoreCase("clear")) {
-                                FakeAddDiscordManager.getInstance().clear();
-                                logResult("fakeadd почистил память");
-                                return;
-                            }
-                        } catch (Exception e) {
-                            logResult("Вылезла ошибка: " + e.getMessage());
-                            StringWriter sw = new StringWriter();
-                            e.printStackTrace(new PrintWriter(sw));
-                            logResult("```" + sw.toString() + "```");
+                            return;
                         }
-                    } else logResult("Сначала напиши !emote и подожди");
+                        if (fullCommand[1].equalsIgnoreCase("clear")) {
+                            FakeAddDiscordManager.getInstance().clear();
+                            logResult("fakeadd почистил память");
+                            return;
+                        }
+                    } catch (Exception e) {
+                        logResult("Вылезла ошибка: " + e.getMessage());
+                        StringWriter sw = new StringWriter();
+                        e.printStackTrace(new PrintWriter(sw));
+                        logResult("```" + sw.toString() + "```");
+                    }
                     break;
                 case "!help":
                     logResult("!start - Запуск простого вайтлист-бота (включать).\n" +

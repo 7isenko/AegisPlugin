@@ -2,7 +2,6 @@ package io.github._7isenko.aegis;
 
 import net.dv8tion.jda.api.entities.Member;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -13,12 +12,12 @@ public class FakeAddDiscordManager {
     private DiscordManager dm = DiscordManager.getInstance();
 
     public void getChosenRoles() {
-        members = dm.getDiscordEmoteManager().getEmotedMembers(lastAmount);
+        members = dm.getDiscordRandomManager().getRandomMembers(lastAmount);
     }
 
     public void getChosenRoles(int amount) {
         lastAmount = amount;
-        members = dm.getDiscordEmoteManager().getEmotedMembers(amount);
+        members = dm.getDiscordRandomManager().getRandomMembers(amount);
     }
 
 
@@ -42,22 +41,11 @@ public class FakeAddDiscordManager {
 
 
     public List<String> getChosen() {
-        ArrayList<String> strings = new ArrayList<>();
-        StringBuilder sb = new StringBuilder();
-        int i = 0;
-        for (Member member : members) {
-            i++;
-            sb.append(i).append(". ").append(member.getUser().getAsTag()).append("\n");
-            if (i % 20 == 0) {
-                strings.add(sb.toString());
-                sb = new StringBuilder();
-            }
-        }
-        strings.add(sb.toString());
-        return strings;
+        return StringsTool.membersToStrings(members);
     }
 
     public void setChosenRoles() {
+        dm.getDiscordRandomManager().sendAnnounceMessage();
         int num = 0;
         for (Member m : members) {
             ++num;
