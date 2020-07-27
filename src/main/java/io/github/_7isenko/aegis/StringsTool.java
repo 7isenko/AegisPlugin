@@ -18,7 +18,8 @@ public class StringsTool {
                 sb = new StringBuilder();
             }
         }
-        strings.add(sb.toString());
+        if (sb.length() != 0)
+            strings.add(sb.toString());
         return strings;
     }
 }
