@@ -32,7 +32,9 @@ public class DiscordRandomManager {
     }
 
     public List<Member> getRandomMembers(int amount) {
-        List<Member> members = new ArrayList<>(dm.getGuild().getMembers());
+        List<Member> members = new ArrayList<>(dm.getGuild().getMembers()); // Если перестал работать, то строчкой ниже
+        //List<Member> members = new ArrayList<>(dm.getGuild().loadMembers().get());
+
         members.removeAll(Collections.singleton(null));
 
         Set<Member> randomized = new HashSet<>();

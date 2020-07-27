@@ -8,7 +8,9 @@ import net.dv8tion.jda.api.utils.ChunkingFilter;
 import net.dv8tion.jda.api.utils.MemberCachePolicy;
 
 import javax.security.auth.login.LoginException;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 import java.util.logging.Logger;
 
@@ -124,10 +126,9 @@ public class DiscordManager {
         }
 
         // Удаление разданных ролей
-        new DiscordRoleRemover(guild.getMembersWithRoles(memberRole), memberRole, guild).removeRoles();
-
-        // Удаление разданных ролей 2
-        stopRandomMode();
+        Set<Member> membersWithRoles = new HashSet<>(guild.getMembersWithRoles(memberRole));
+        membersWithRoles.addAll(guild.getMembersWithRoles(chosenRole));
+        membersWithRoles.forEach(member -> guild.modifyMemberRoles(member).queue(null, throwable -> controlChannel.sendMessage("Какой-то чел решил вызвать ошибку во время удаления ролей: " + throwable.getMessage()).queue()));
 
         // Остановка отслеживания сообщений
         try {
@@ -152,10 +153,6 @@ public class DiscordManager {
         guild.addRoleToMember(member, chosenRole).queue(aVoid -> greetingChannel.sendMessage(number + ". Приветствую, " + member.getAsMention() + ", бегом регистрироваться в <#" + whitelistChannelId + ">, и ты в съемках!").queue(),
                 throwable -> controlChannel.sendMessage("Похоже, что " + member.getUser().getAsTag() + " был выбран ботом, но вышел из сервера.").queue());
 
-    }
-
-    public void stopRandomMode() {
-        new DiscordRoleRemover(guild.getMembersWithRoles(chosenRole), chosenRole, guild).removeRoles();
     }
 
     public static DiscordManager getInstance() {
