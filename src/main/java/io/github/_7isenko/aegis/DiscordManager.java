@@ -139,6 +139,7 @@ public class DiscordManager {
         }
     }
 
+    // DUPLICATE CODE
     public void setChosenRoles(int amount) {
         List<Member> members = getDiscordRandomManager().getRandomMembers(amount);
         getDiscordRandomManager().sendAnnounceMessage();
@@ -147,6 +148,8 @@ public class DiscordManager {
             ++num;
             addRoleToMember(m, num);
         }
+        announceChannel.sendMessage("Ребята, которых выбрал бот:").queue();
+        StringsTool.membersToStrings(members).forEach(m -> announceChannel.sendMessage("```" + m + "```").queue());
     }
 
     public void addRoleToMember(Member member, int number) {

@@ -44,6 +44,7 @@ public class FakeAddDiscordManager {
         return StringsTool.membersToStrings(members);
     }
 
+    // DUPLICATE CODE
     public void setChosenRoles() {
         dm.getDiscordRandomManager().sendAnnounceMessage();
         int num = 0;
@@ -51,6 +52,9 @@ public class FakeAddDiscordManager {
             ++num;
             dm.addRoleToMember(m, num);
         }
+        dm.getAnnounceChannel().sendMessage("Ребята, которых выбрал бот:").queue();
+        StringsTool.membersToStrings(members).forEach(m -> dm.getAnnounceChannel().sendMessage("```" + m + "```").queue());
+
     }
 
     public void clear() {

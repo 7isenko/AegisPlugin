@@ -1,12 +1,12 @@
 name: Aegis
-version: "1.9"
+version: "1.9.9"
 author: 7isenko
 main: io.github._7isenko.aegis.Aegis
 api-version: "1.12"
 commands:
   event:
     description: Starts or stops your discord bot. "kick" kicks every member without role from discord.
-    usage: /event start, /event stop, /event kick, /event emode, /event add <num>
+    usage: /event start, /event stop, /event kick, /event add <num>
     permission: aegis.usage
 permissions:
   aegis.usage:
