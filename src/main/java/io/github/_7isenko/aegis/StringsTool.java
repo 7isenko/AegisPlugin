@@ -12,7 +12,10 @@ public class StringsTool {
         int i = 0;
         for (Member member : members) {
             i++;
-            sb.append(i).append(". ").append(member.getUser().getAsTag()).append("\n");
+            sb.append(i).append(". ");
+            if (member != null)
+                sb.append(member.getUser().getAsTag()).append("\n");
+            else sb.append("ливнул").append("\n");
             if (i % 20 == 0) {
                 strings.add(sb.toString());
                 sb = new StringBuilder();
