@@ -4,14 +4,15 @@ import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.UUID;
 
 public class WhitelistManager {
-    private ArrayList<OfflinePlayer> whitelistedPlayers;
+    private HashSet<OfflinePlayer> whitelistedPlayers;
     private static WhitelistManager instance;
 
     private WhitelistManager() {
-        whitelistedPlayers = new ArrayList<>();
+        whitelistedPlayers = new HashSet<>();
     }
 
     public void addToWhitelist(UUID uuid) {
@@ -28,7 +29,7 @@ public class WhitelistManager {
                 whitelistedPlayers) {
             p.setWhitelisted(false);
         }
-        whitelistedPlayers = new ArrayList<>();
+        whitelistedPlayers = new HashSet<>();
     }
 
     public static WhitelistManager getInstance() {
