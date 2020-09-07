@@ -1,5 +1,9 @@
-package io.github._7isenko.aegis;
+package io.github._7isenko.aegis.discord;
 
+import io.github._7isenko.aegis.Aegis;
+import io.github._7isenko.aegis.misc.StringsTool;
+import io.github._7isenko.aegis.minecraft.UUIDHelper;
+import io.github._7isenko.aegis.minecraft.WhitelistManager;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.*;
@@ -84,7 +88,7 @@ public class DiscordManager {
     }
 
     public void register(String username) throws IndexOutOfBoundsException, NullPointerException {
-        UUID uuid = UUIDGetter.getInstance().getUuid(username);
+        UUID uuid = UUIDHelper.getUuid(username);
         whitelistManager.addToWhitelist(uuid);
     }
 

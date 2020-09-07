@@ -1,9 +1,8 @@
-package io.github._7isenko.aegis;
+package io.github._7isenko.aegis.minecraft;
 
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.UUID;
 

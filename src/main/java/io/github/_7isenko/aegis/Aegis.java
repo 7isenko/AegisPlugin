@@ -1,5 +1,8 @@
 package io.github._7isenko.aegis;
 
+import io.github._7isenko.aegis.discord.DiscordManager;
+import io.github._7isenko.aegis.minecraft.EventCommand;
+import io.github._7isenko.aegis.minecraft.WhitelistManager;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.PluginManager;

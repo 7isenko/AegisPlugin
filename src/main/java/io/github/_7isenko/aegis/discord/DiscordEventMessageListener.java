@@ -1,4 +1,4 @@
-package io.github._7isenko.aegis;
+package io.github._7isenko.aegis.discord;
 
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
@@ -26,11 +26,7 @@ public class DiscordEventMessageListener extends ListenerAdapter {
                 return;
 
             // Remove a "chosen" role
-            try {
-                guild.removeRoleFromMember(event.getMember(), dm.getChosenRole()).queue();
-            } catch (Exception e) {
-                // Ignore
-            }
+            guild.removeRoleFromMember(event.getMember(), dm.getChosenRole()).queue();
 
 
             String keyword = "set";
@@ -47,7 +43,7 @@ public class DiscordEventMessageListener extends ListenerAdapter {
                 } catch (IndexOutOfBoundsException e) {
                     badRequest(message, "ввел никнейм неправильно.");
                 } catch (NullPointerException e) {
-                    badRequest(message, "ввел никнейм, который не существует.");
+                    badRequest(message, "ввел несуществующий ник");
                 }
             } else badRequest(message, "вместо !" + keyword + " написал " + rawMessage);
         } catch (Exception e) {
@@ -58,12 +54,12 @@ public class DiscordEventMessageListener extends ListenerAdapter {
     private void badRequest(Message message, String text) {
         Member member = message.getMember();
         if (member != null) {
-            dm.getControlChannel().sendMessage("<@" + member.getId() + ">" + " " + text).queue();
+            dm.getControlChannel().sendMessage(member.getAsMention() + " " + text).queue();
             message.addReaction("\uD83D\uDC4E").queue(); // 👎
             if (dm.isAllowKick())
                 member.kick(text).queue();
         } else {
-            dm.getControlChannel().sendMessage("Какой-то писюн произвел исключение: " + text);
+            dm.getControlChannel().sendMessage("Туда его: " + text);
         }
     }
 

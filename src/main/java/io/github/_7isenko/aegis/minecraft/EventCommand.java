@@ -1,10 +1,11 @@
-package io.github._7isenko.aegis;
+package io.github._7isenko.aegis.minecraft;
 
+import io.github._7isenko.aegis.discord.DiscordManager;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 
-public class EventCommand implements CommandExecutor {
+public class  EventCommand implements CommandExecutor {
     String action;
     DiscordManager dm;
 
