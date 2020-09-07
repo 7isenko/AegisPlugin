@@ -1,4 +1,4 @@
-package io.github._7isenko.aegis.core.control;
+package io.github._7isenko.aegis.commands;
 
 import org.jetbrains.annotations.Nullable;
 
@@ -13,9 +13,9 @@ public interface Command {
      * @return Result message
      */
     String call(@Nullable String... args);
-
-    /**
-     * @return Command description for a help message
-     */
-    String getDescription();
+//
+//    /**
+//     * @return Command description for the help message
+//     */
+//    String getDescription();
 }

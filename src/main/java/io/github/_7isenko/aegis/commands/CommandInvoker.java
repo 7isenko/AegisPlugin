@@ -1,4 +1,4 @@
-package io.github._7isenko.aegis.core.control;
+package io.github._7isenko.aegis.commands;
 
 import java.util.HashMap;
 import java.util.Map;

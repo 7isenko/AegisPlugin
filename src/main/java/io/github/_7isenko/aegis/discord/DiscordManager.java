@@ -20,9 +20,8 @@ import java.util.logging.Logger;
 
 public class DiscordManager {
     private static DiscordManager instance;
-    private Logger logger;
 
-    private JDABuilder builder;
+
     private JDA jda;
 
     private Guild guild;
@@ -48,42 +47,24 @@ public class DiscordManager {
     private DiscordManager() {
         String token = Aegis.config.getString("token");
         String serverId = Aegis.config.getString("server_id");
-        String memberRoleId = Aegis.config.getString("member_role_id");
-        String chosenRoleId = Aegis.config.getString("chosen_role_id");
-        whitelistChannelId = Aegis.config.getString("whitelist_channel_id");
-        String controlChannelId = Aegis.config.getString("control_channel_id");
-        String announceChannelId = Aegis.config.getString("announce_channel_id");
-        String greetingChannelId = Aegis.config.getString("greeting_channel_id");
         allowKick = Aegis.config.getBoolean("allow_kick");
 
-        logger = Aegis.logger;
-        eventActive = false;
+            try {
+                jda = BotBuilder.build(token);
+            } catch (LoginException e) {
+                System.out.println("токен сдох");
+            }
 
-        // Config and build the JDA
-        builder = JDABuilder.createDefault(token);
-        configureBuilder();
-        try {
-            jda = builder.build();
-        } catch (LoginException e) {
-            e.printStackTrace();
-            logger.info("Token problems. Contact admin");
-        }
-
-        // Filling data
-        try {
-            jda.awaitReady();
             guild = jda.getGuildById(serverId);
-            memberRole = guild.getRoleById(memberRoleId);
-            chosenRole = guild.getRoleById(chosenRoleId);
+            // memberRole = guild.getRoleById(memberRoleId);
+            // chosenRole = guild.getRoleById(chosenRoleId);
             whitelistChannel = guild.getTextChannelById(whitelistChannelId);
-            controlChannel = guild.getTextChannelById(controlChannelId);
-            announceChannel = guild.getTextChannelById(announceChannelId);
-            greetingChannel = guild.getTextChannelById(greetingChannelId);
+            // controlChannel = guild.getTextChannelById(controlChannelId);
+            // announceChannel = guild.getTextChannelById(announceChannelId);
+            // greetingChannel = guild.getTextChannelById(greetingChannelId);
             discordControlMessageListener = new DiscordControlMessageListener(this);
             jda.addEventListener(discordControlMessageListener);
-        } catch (InterruptedException e) {
-            // ignore
-        }
+
 
     }
 
@@ -92,13 +73,7 @@ public class DiscordManager {
         whitelistManager.addToWhitelist(uuid);
     }
 
-    private void configureBuilder() {
-        builder.setActivity(Activity.listening("чат"));
-        builder.setChunkingFilter(ChunkingFilter.ALL);
-        builder.setMemberCachePolicy(MemberCachePolicy.ALL);
-        builder.enableIntents(GatewayIntent.GUILD_MEMBERS);
-        builder.setRelativeRateLimit(true);
-    }
+
 
     public void kickWithoutRoles() {
         List<Member> members = guild.getMembers();
