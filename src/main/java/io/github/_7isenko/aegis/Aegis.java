@@ -1,7 +1,6 @@
 package io.github._7isenko.aegis;
 
-import io.github._7isenko.aegis.discord.DiscordManager;
-import io.github._7isenko.aegis.minecraft.EventCommand;
+import io.github._7isenko.aegis.minecraft.EventCommandExecutor;
 import io.github._7isenko.aegis.minecraft.WhitelistManager;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -25,10 +24,9 @@ public class Aegis extends JavaPlugin {
         pluginManager = Bukkit.getPluginManager();
 
         if (config.getBoolean("filled")) {
-            DiscordManager.getInstance();
 
             // Регистрация команд
-            this.getCommand("event").setExecutor(new EventCommand());
+            this.getCommand("event").setExecutor(new EventCommandExecutor());
             logger.info("DiscordMC is started!");
         } else {
             logger.info("You did not fill the config. Plugin is going to disable.");
@@ -38,13 +36,7 @@ public class Aegis extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        if (WhitelistManager.hasInstance()) {
-            WhitelistManager.getInstance().clearWhitelist();
-            logger.info("Whitelist is clean");
-        }
-        if (DiscordManager.hasInstance()) {
-            DiscordManager.getInstance().disableDiscordListener();
-            logger.info("Discord listener is off");
-        }
+        WhitelistManager.getInstance().clearWhitelist();
+        logger.info("Whitelist is clean");
     }
 }

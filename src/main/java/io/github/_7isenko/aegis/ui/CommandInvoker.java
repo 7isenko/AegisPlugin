@@ -1,4 +1,7 @@
-package io.github._7isenko.aegis.commands;
+package io.github._7isenko.aegis.ui;
+
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -7,10 +10,17 @@ import java.util.Map;
  * Class that used to collect and execute any commands
  */
 public class CommandInvoker {
+    private static CommandInvoker instance;
     private final Map<String, Command> commands;
 
-    public CommandInvoker() {
+    private CommandInvoker() {
         commands = new HashMap<>();
+    }
+
+    public static CommandInvoker getInstance() {
+        if (instance == null)
+            instance = new CommandInvoker();
+        return instance;
     }
 
     /**
@@ -45,7 +55,10 @@ public class CommandInvoker {
      * @param args - Passed command arguments
      * @return Result of command execution
      */
-    public String execute(String name, String... args) {
-        return commands.get(name).call(args);
+    public String execute(@NotNull String name, @Nullable String... args) {
+        Command command = commands.get(name);
+        if (command != null)
+            return command.call(args);
+        else return "Неизвестная команда";
     }
 }
