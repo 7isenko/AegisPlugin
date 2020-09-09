@@ -1,15 +1,16 @@
-package io.github._7isenko.aegis;
+package io.github._7isenko.aegis.minecraft;
 
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.UUID;
 
 public class WhitelistManager {
+    //TODO: добавить легковесную бд для бэкапа
+
     private HashSet<OfflinePlayer> whitelistedPlayers;
-    private static WhitelistManager instance;
+    private volatile static WhitelistManager instance;
 
     private WhitelistManager() {
         whitelistedPlayers = new HashSet<>();
@@ -34,12 +35,11 @@ public class WhitelistManager {
 
     public static WhitelistManager getInstance() {
         if (instance == null) {
-            instance = new WhitelistManager();
+            synchronized (WhitelistManager.class) {
+                if (instance == null)
+                    instance = new WhitelistManager();
+            }
         }
         return instance;
-    }
-
-    public static boolean hasInstance() {
-        return instance != null;
     }
 }

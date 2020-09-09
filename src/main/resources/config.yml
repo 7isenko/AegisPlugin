@@ -1,13 +1,29 @@
+    ### Основные настройки ###
+
+# Токен дискорд-бота
 token: put_here_your_token
-server_id: 1234567890
-control_channel_id: 1234567890
-whitelist_channel_id: 1234567890
-announce_channel_id: 1234567890
-greeting_channel_id: 1234567890
-member_role_id: 1234567890
-chosen_role_id: 1234567890
 
-allow_kick: true
+# ID сервера. Его можно посмотреть в настройках
+serverId: 123
 
-# Поставить true, если конфиг заполнен.
-filled: false
+# Если стоит значение true, то бот сможет кикать пользователей с него
+allowKick: true
+
+    ### Названия каналов и ролей ###
+
+  ## Каналы ##
+# В этот канал отправляются списки зарандомленных людей
+main: main
+
+# Этот канал используется для управления ботом с помощью команд
+control: control
+
+# В этот канал пользователи вводят свои ники
+whitelist: whitelist
+
+  ## Роли ##
+# Роль человека, выбранного рандомом с помощью команды add
+picked: picked
+
+# Роль человека, вписавшего свой ник в whitelist
+participant: participant
