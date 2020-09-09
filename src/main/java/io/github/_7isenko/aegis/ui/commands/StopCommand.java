@@ -14,9 +14,11 @@ public class StopCommand extends DiscordColleague implements Command {
 
     @Override
     public String call(@Nullable String... args) {
-        mediator.getMessageListener().setWhitelistOn(false);
-        mediator.getChatController().sendToWhitelistChannel("Всем спасибо, все свободны");
         WhitelistManager.getInstance().clearWhitelist();
+        if (mediator.getMessageListener().isWhitelistOn()) {
+            mediator.getMessageListener().setWhitelistOn(false);
+            mediator.getChatController().sendToWhitelistChannel("Всем спасибо, все свободны");
+        }
         mediator.getRoleController().clearPartakers();
         return "Вайтлист очищен, роли забираю.";
     }

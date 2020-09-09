@@ -21,9 +21,10 @@ public class DiscordMediator {
         this.config = config;
         this.roleController = new RoleController(this);
         this.chatController = new ChatController(this);
-        this.memberController = new MemberController(this, true); // TODO: брать из конфига как-то
+        this.memberController = new MemberController(this);
         this.logger = new DiscordLogger(this);
         this.messageListener = new DiscordMessageListener(this);
+        jda.addEventListener(messageListener);
     }
 
     public JDA getJda() {

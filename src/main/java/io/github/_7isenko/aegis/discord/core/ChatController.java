@@ -14,9 +14,9 @@ public class ChatController extends DiscordColleague {
 
     public ChatController(DiscordMediator mediator) {
         super(mediator);
-        controlChannel = getChannel("control");
-        mainChannel = getChannel("main");
-        whitelistChannel = getChannel("whitelist");
+        controlChannel = getChannel(mediator.getConfig().getLocalizedName("control"));
+        mainChannel = getChannel(mediator.getConfig().getLocalizedName("main"));
+        whitelistChannel = getChannel(mediator.getConfig().getLocalizedName("whitelist"));
     }
 
     public void sendToControlChannel(String message) {

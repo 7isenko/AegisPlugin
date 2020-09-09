@@ -18,6 +18,8 @@ public class SetCommand implements Command {
     public String call(@NotNull String... args) {
         try {
             String username = args[0];
+            if (username.equals("null"))
+                return "Пустой никнейм";
             UUID uuid = UUIDHelper.getUuid(username);
             manager.addToWhitelist(uuid);
         } catch (Exception e) {

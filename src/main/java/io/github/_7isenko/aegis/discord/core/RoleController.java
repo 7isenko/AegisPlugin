@@ -14,8 +14,8 @@ public class RoleController extends DiscordColleague {
 
     public RoleController(DiscordMediator mediator) {
         super(mediator);
-        this.participantRole = getRole("participant");
-        this.pickedRole = getRole("picked");
+        this.participantRole = getRole(mediator.getConfig().getLocalizedName("participant"));
+        this.pickedRole = getRole(mediator.getConfig().getLocalizedName("picked"));
     }
 
     public void clearPartakers() {

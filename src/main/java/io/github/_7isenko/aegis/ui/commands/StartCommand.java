@@ -12,8 +12,10 @@ public class StartCommand extends DiscordColleague implements Command {
 
     @Override
     public String call(@Nullable String... args) {
-        mediator.getMessageListener().setWhitelistOn(true);
-        mediator.getChatController().sendToWhitelistChannel("Начинайте писать !set ник");
+        if (!mediator.getMessageListener().isWhitelistOn()) {
+            mediator.getMessageListener().setWhitelistOn(true);
+            mediator.getChatController().sendToWhitelistChannel("Начинайте писать !set ник");
+        }
         return "Слушаю whitelist.";
     }
 }

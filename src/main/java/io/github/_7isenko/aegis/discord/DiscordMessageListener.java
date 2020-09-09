@@ -36,7 +36,8 @@ public class DiscordMessageListener extends ListenerAdapter {
         if (event.getChannel().equals(dm.getChatController().getWhitelistChannel()) && whitelistOn) {
             if (words[0].equalsIgnoreCase("!set") || words[0].equalsIgnoreCase("/set")) {
 
-                String result = invoker.execute("set", Arrays.copyOfRange(words, 1, 1));
+                String[] nick = Arrays.copyOfRange(words, 1, 2);
+                String result = invoker.execute("set", nick);
 
                 if (result == null) {
                     message.addReaction("\uD83D\uDC4D").queue(); // 👍
@@ -62,6 +63,10 @@ public class DiscordMessageListener extends ListenerAdapter {
                 }
             }
         }
+    }
+
+    public boolean isWhitelistOn() {
+        return whitelistOn;
     }
 
     public void setWhitelistOn(boolean whitelistOn) {
