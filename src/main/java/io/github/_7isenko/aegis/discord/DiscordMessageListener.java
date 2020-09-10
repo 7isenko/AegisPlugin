@@ -3,7 +3,6 @@ package io.github._7isenko.aegis.discord;
 import io.github._7isenko.aegis.discord.core.DiscordMediator;
 import io.github._7isenko.aegis.ui.CommandInvoker;
 import net.dv8tion.jda.api.entities.Guild;
-import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;

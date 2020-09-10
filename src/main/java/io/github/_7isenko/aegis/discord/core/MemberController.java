@@ -24,7 +24,7 @@ public class MemberController extends DiscordColleague {
     }
 
     public void kickStrangers() {
-        if (allowKick)
+        if (!allowKick)
             return;
         List<Member> members = mediator.getGuild().getMembers();
         for (Member member :
