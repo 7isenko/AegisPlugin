@@ -4,6 +4,7 @@ import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Role;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -11,11 +12,15 @@ public class RoleController extends DiscordColleague {
 
     private final Role participantRole;
     private final Role pickedRole;
+    private final List<Role> excluded;
 
     public RoleController(DiscordMediator mediator) {
         super(mediator);
         this.participantRole = getRole(mediator.getConfig().getLocalizedName("participant"));
         this.pickedRole = getRole(mediator.getConfig().getLocalizedName("picked"));
+        this.excluded = getRoles(mediator.getConfig().getExcludedRoles());
+        excluded.add(pickedRole);
+        excluded.add(participantRole);
     }
 
     public void clearPartakers() {
@@ -49,12 +54,22 @@ public class RoleController extends DiscordColleague {
         mediator.getGuild().removeRoleFromMember(member, role).queue();
     }
 
+    public List<Role> getExcludedRoles() {
+        return excluded;
+    }
+
     public Role getParticipantRole() {
         return participantRole;
     }
 
     public Role getPickedRole() {
         return pickedRole;
+    }
+
+    public List<Role> getRoles(List<String> names) {
+        ArrayList<Role> roles = new ArrayList<>();
+        names.forEach(name -> roles.add(getRole(name)));
+        return roles;
     }
 
     public Role getRole(String name) {
@@ -86,5 +101,4 @@ public class RoleController extends DiscordColleague {
     public Role createRole(@NotNull String name) {
         return mediator.getGuild().createRole().setName(name).complete();
     }
-
 }

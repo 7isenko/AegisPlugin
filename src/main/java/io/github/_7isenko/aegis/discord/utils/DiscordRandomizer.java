@@ -8,7 +8,11 @@ import java.util.*;
 
 public class DiscordRandomizer {
     public static Set<Member> getRandomMembers(Guild guild, int amount, Collection<Role> excluded) {
-        List<Member> members = new ArrayList<>(guild.getMembers());
+        return getRandomMembers(new ArrayList<>(guild.getMembers()), amount, excluded);
+    }
+
+    public static Set<Member> getRandomMembers(List<Member> memberList, int amount, Collection<Role> excluded) {
+        List<Member> members = new ArrayList<>(memberList);
 
         Set<Member> randomized = new HashSet<>();
         Random r = new Random(System.currentTimeMillis());
@@ -27,7 +31,7 @@ public class DiscordRandomizer {
     }
 
     private static boolean hasRole(Member member, Collection<Role> roles) {
-        if (roles == null)
+        if (roles == null || roles.isEmpty())
             return !member.getRoles().isEmpty();
         for (Role role : roles) {
             if (member.getRoles().contains(role))

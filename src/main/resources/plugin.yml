@@ -6,7 +6,7 @@ api-version: "1.12"
 commands:
   event:
     description: Starts or stops your discord bot. "kick" kicks every member without role from discord.
-    usage: /event start, /event stop, /event kick, /event add <num>, /event set <nick>
+    usage: /event start, /event stop, /event kick, /event add <num>, /event set <nick>, /event react
     permission: aegis.usage
 permissions:
   aegis.usage:

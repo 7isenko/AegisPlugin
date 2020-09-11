@@ -15,6 +15,8 @@ public class StopCommand extends DiscordColleague implements Command {
     @Override
     public String call(@Nullable String... args) {
         WhitelistManager.getInstance().clearWhitelist();
+        mediator.getListenerController().stopReactListener();
+        mediator.getMemberController().removeMemberCollector("react");
         if (mediator.getMessageListener().isWhitelistOn()) {
             mediator.getMessageListener().setWhitelistOn(false);
             mediator.getChatController().sendToWhitelistChannel("Всем спасибо, все свободны");

@@ -13,7 +13,7 @@ public class DiscordMediator {
     private final RoleController roleController;
     private final MemberController memberController;
     private final DiscordLogger logger;
-    private final DiscordMessageListener messageListener;
+    private final ListenerController listenerController;
 
     public DiscordMediator(JDA jda, Guild guild, Config config) {
         this.jda = jda;
@@ -23,8 +23,7 @@ public class DiscordMediator {
         this.chatController = new ChatController(this);
         this.memberController = new MemberController(this);
         this.logger = new DiscordLogger(this);
-        this.messageListener = new DiscordMessageListener(this);
-        jda.addEventListener(messageListener);
+        this.listenerController = new ListenerController(this);
     }
 
     public JDA getJda() {
@@ -56,6 +55,10 @@ public class DiscordMediator {
     }
 
     public DiscordMessageListener getMessageListener() {
-        return messageListener;
+        return listenerController.getDiscordMessageListener();
+    }
+
+    public ListenerController getListenerController() {
+        return listenerController;
     }
 }

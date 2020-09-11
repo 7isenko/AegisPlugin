@@ -67,6 +67,7 @@ public class Aegis extends JavaPlugin {
         invoker.addCommand("set", new SetCommand());
         invoker.addCommand("kick", new KickCommand(dm));
         invoker.addCommand("help", new HelpCommand());
+        invoker.addCommand("react", new ReactCommand(dm));
         return invoker;
     }
 }

@@ -3,6 +3,7 @@ package io.github._7isenko.aegis.minecraft;
 import org.bukkit.configuration.file.FileConfiguration;
 
 import java.util.HashMap;
+import java.util.List;
 
 public class Config {
     private final FileConfiguration config;
@@ -19,6 +20,10 @@ public class Config {
 
     public String getLocalizedName(String name) {
         return nomenclature.get(name);
+    }
+
+    public List<String> getEmoteModeMessages() {
+        return config.getStringList("messages");
     }
 
     public long getServerId() {
@@ -39,5 +44,9 @@ public class Config {
         n.put("picked", config.getString("picked"));
 
         return n;
+    }
+
+    public List<String> getExcludedRoles() {
+        return config.getStringList("excluded");
     }
 }
