@@ -21,6 +21,7 @@ public class ListenerController extends DiscordColleague {
     public void startReactListener(String messageId, MemberCollector collector) {
         stopReactListener();
         reactListener = new ReactListener(messageId, collector);
+        mediator.getJda().addEventListener(reactListener);
     }
 
     public void stopReactListener() {
