@@ -2,6 +2,7 @@ package io.github._7isenko.aegis.discord;
 
 import io.github._7isenko.aegis.discord.core.DiscordMediator;
 import io.github._7isenko.aegis.ui.CommandInvoker;
+import net.dv8tion.jda.api.entities.ChannelType;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
@@ -24,6 +25,11 @@ public class DiscordMessageListener extends ListenerAdapter {
 
     @Override
     public void onMessageReceived(@NotNull MessageReceivedEvent event) {
+
+        if (!event.isFromType(ChannelType.TEXT)) {
+            return; // why, JDA developers
+        }
+
         Guild guild = event.getGuild();
         Message message = event.getMessage();
 
